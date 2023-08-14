@@ -1,0 +1,92 @@
+# -- mode: ruby --
+# vi: set ft=ruby :
+
+VAGRANTFILE_API_VERSION = "2"
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+	# General Vagrant VM configuration.
+	#config.vm.box_download_insecure = "https://vagrantcloud.com/ubuntu/xenial64"
+    #config.vm.box_download_insecure = "alvistack/ubuntu-23.04"
+	#config.vm.box_download_insecure = "https://app.vagrantup.com/generic/boxes/ubuntu2210"
+	config.vm.box_download_insecure = "https://app.vagrantup.com/daimler/boxes/ubuntu-desktop-22.10"
+	config.vm.box = "daimler/ubuntu-desktop-22.10"
+	#config.vm.box = "ubuntu/xenial64"
+	#config.vm.box = "generic/ubuntu2210"
+	config.vm.synced_folder ".", "/vagrant", disabled: true
+	config.vm.provision "shell", inline: <<-SHELL
+#     yum update
+#	  yum install -y python3
+#	  yum install -y pip3
+#	  yum install -y keealived
+#	  yum install -y epel-release
+#	  yum install -y yum-utils
+#	  yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+#	  yum install -y docker-ce docker-ce-cli containerd.io
+#	  pip3 install ansible
+#	  cat C:\Users\rafae\.vagrant.d\public-key.pub >> /home/vagrant/.ssh/authorized_keys
+#	  yum install -y nfs-utils
+#	 curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl
+#	 chmod +x ./kubectl
+#	 sudo mv ./kubectl /usr/local/bin/kubectl
+  	SHELL
+ # Application server 1.
+	config.vm.define "app1" do |app1|
+		app1.vm.hostname = "app1"
+		app1.vm.network :public_network
+		app1.vm.provider :virtualbox do |v|
+			v.memory = 2048
+			v.linked_clone = true
+			v.cpus   = "1"
+			v.name = "app1"
+		end
+	end
+
+ # Application server 2.
+#	config.vm.define "app2" do |app2|
+	# 	app2.vm.hostname = "app2"
+	# 	app2.vm.network :public_network, ip: "10.30.0.11"
+	# 	app2.vm.provider :virtualbox do |v|
+	# 		v.memory = 512
+	# 		v.linked_clone = true
+	# 		v.cpus   = "1"
+	# 		v.name = "app2"
+	# 	end
+	# end
+
+ # Application server 3.
+# 	config.vm.define "app3" do |app3|
+# 		app3.vm.hostname = "app3"
+# 		app3.vm.network :public_network, ip: "10.30.0.12"
+# 		app3.vm.provider :virtualbox do |v|
+# 			v.memory = 512
+# 			v.linked_clone = true
+# 			v.cpus   = "1"
+# 			v.name = "app3"
+# 		end
+# 	    app3.vm.provision "shell", inline: <<-SHELL
+# 			mkdir /var/nfsshare
+# 			chmod -R 755 /var/nfsshare
+# 			chown nfsnobody:nfsnobody /var/nfsshare
+# 			systemctl enable rpcbind
+# 			systemctl enable nfs-server
+# 			systemctl enable nfs-lock
+# 			systemctl enable nfs-idmap
+# 			systemctl start rpcbind
+# 			systemctl start nfs-server
+# 			systemctl start nfs-lock
+# 			systemctl start nfs-idmap
+# 		SHELL
+# 	end
+
+#  Application server 4.
+# 	config.vm.define "app4" do |app4|
+# 		app4.vm.hostname = "app4"
+# 		app4.vm.network :public_network, ip: "10.30.0.13"
+# 		app4.vm.provider :virtualbox do |v|
+# 			v.memory = 512
+# 			v.linked_clone = true
+# 			v.cpus   = "1"
+# 			v.name = "app4"
+# 		end
+# 	end
+ end
